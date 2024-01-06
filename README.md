@@ -1,3 +1,4 @@
+
 my_flutter_app/
 |-- lib/
 |   |-- main.dart
@@ -51,4 +52,5 @@ android/ and ios/: Native code for Android and iOS integration.
 
 pubspec.yaml: Flutter dependency and metadata configuration file.
 
-README.md: Documentation for your project.
+
+
