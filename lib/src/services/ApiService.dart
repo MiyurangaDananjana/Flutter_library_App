@@ -3,8 +3,7 @@ import 'package:http/http.dart' as http;
 import '../repositories/session_storage.dart';
 
 class ApiService {
-
-  static const String _baseUrl = 'http://localhost:5107';
+  static const String _baseUrl = 'http://192.168.8.101:5151';
 
   static Future<bool> sendLoginRequest(Map<String, dynamic> requestBody) async {
     try {
@@ -15,6 +14,7 @@ class ApiService {
           'Content-Type': 'application/json',
         },
       );
+
       if (response.statusCode == 200) {
         if (response.body == 'IsUserNotValid') {
           return false;
@@ -29,5 +29,4 @@ class ApiService {
       return false; // User is not logged in due to an exception
     }
   }
-  
 }

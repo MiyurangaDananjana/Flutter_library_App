@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'src/screen/home_screen.dart';
+// import 'src/screen/home_screen.dart';
 import './src/services/ApiService.dart';
-
+import './src/screen/home.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -84,12 +84,13 @@ class MyApp extends StatelessWidget {
                       'UserPassword': password,
                     };
 
-                     bool isLoggedIn = await ApiService.sendLoginRequest(requestBody);
+                    bool isLoggedIn =
+                        await ApiService.sendLoginRequest(requestBody);
 
                     if (isLoggedIn) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                        MaterialPageRoute(builder: (context) => Home()),
                       );
                     } else {
                       showDialog(
@@ -132,5 +133,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
