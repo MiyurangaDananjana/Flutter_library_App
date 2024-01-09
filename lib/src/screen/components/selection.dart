@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './discover_books.dart';
+import './books_details.dart';
 
 class selection extends StatelessWidget {
   @override
@@ -30,8 +31,10 @@ class selection extends StatelessWidget {
           SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              // Handle Filter button click
-              print('Filter button clicked');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BookDetails()),
+              );
             },
             child: Text(
               'Library Overview',
