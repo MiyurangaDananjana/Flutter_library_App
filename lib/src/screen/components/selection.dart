@@ -33,7 +33,7 @@ class selection extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => BookDetails()),
+                MaterialPageRoute(builder: (context) => BookDetails(bookId: 1)),
               );
             },
             child: Text(

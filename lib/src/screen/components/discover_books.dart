@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/src/screen/components/books_details.dart';
+import 'package:flutter_application/src/services/ApiService.dart';
 
 class discover_books extends StatefulWidget {
   @override
@@ -6,42 +8,35 @@ class discover_books extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<discover_books> {
-  final List<Map<String, dynamic>> _allUsers = [
-    {"id": 1, "name": "Andy", "age": 29},
-    {"id": 2, "name": "Aragon", "age": 40},
-    {"id": 3, "name": "Bob", "age": 5},
-    {"id": 4, "name": "Barbara", "age": 35},
-    {"id": 5, "name": "Candy", "age": 21},
-    {"id": 6, "name": "Colin", "age": 55},
-    {"id": 7, "name": "Audra", "age": 30},
-    {"id": 8, "name": "Banana", "age": 14},
-    {"id": 9, "name": "Caversky", "age": 100},
-    {"id": 10, "name": "Becky", "age": 32},
-  ];
+  final TextEditingController _searchController = TextEditingController();
+  List<Map<String, dynamic>> _foundUsers = [];
 
   // This list holds the data for the list view
-  List<Map<String, dynamic>> _foundUsers = [];
   @override
-  initState() {
-    _foundUsers = _allUsers;
+  void initState() {
     super.initState();
+    _loadData();
   }
 
   // This function is called whenever the text field changes
-  void _runFilter(String enteredKeyword) {
-    List<Map<String, dynamic>> results = [];
-    if (enteredKeyword.isEmpty) {
-      results = _allUsers;
-    } else {
-      results = _allUsers
-          .where((user) =>
-              user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
-          .toList();
-    }
+  Future<void> _loadData() async {
+    final title = _searchController.text;
+    final apiService = ApiService();
 
-    setState(() {
-      _foundUsers = results;
-    });
+    try {
+      final List<Map<String, dynamic>> responseData =
+          await apiService.getBooksByTitle(title);
+      setState(() {
+        _foundUsers = responseData;
+      });
+    } catch (e) {
+      print('Error: $e');
+      // Handle error, show a snackbar, or any other error handling logic
+    }
+  }
+
+  void _runFilter(String enteredKeyword) {
+    _loadData();
   }
 
   @override
@@ -62,6 +57,7 @@ class _HomeScreenState extends State<discover_books> {
               height: 20,
             ),
             TextField(
+              controller: _searchController,
               onChanged: (value) => _runFilter(value),
               decoration: const InputDecoration(suffixIcon: Icon(Icons.search)),
             ),
@@ -72,22 +68,33 @@ class _HomeScreenState extends State<discover_books> {
               child: _foundUsers.isNotEmpty
                   ? ListView.builder(
                       itemCount: _foundUsers.length,
-                      itemBuilder: (context, index) => Card(
-                        key: ValueKey(_foundUsers[index]["id"]),
-                        color: Colors.blue,
-                        elevation: 4,
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        child: ListTile(
-                          leading: Text(
-                            _foundUsers[index]["id"].toString(),
-                            style: const TextStyle(
-                                fontSize: 24, color: Colors.white),
+                      itemBuilder: (context, index) => GestureDetector(
+                        onTap: () {
+                          // Handle the click event here
+                          int bookId = _foundUsers[index]["bookId"];
+                          print("Clicked on book with ID: $bookId");
+                          _handleBookTap(context, bookId);
+                        },
+                        child: Card(
+                          key: ValueKey(_foundUsers[index]["bookId"]),
+                          color: Colors.blue,
+                          elevation: 4,
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: ListTile(
+                            leading: Text(
+                              _foundUsers[index]["bookId"].toString(),
+                              style: const TextStyle(
+                                  fontSize: 24, color: Colors.white),
+                            ),
+                            title: Text(
+                              _foundUsers[index]['title'],
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            subtitle: Text(
+                              '${_foundUsers[index]["author"]} - ${_foundUsers[index]["year"]}',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
-                          title: Text(_foundUsers[index]['name'],
-                              style: TextStyle(color: Colors.white)),
-                          subtitle: Text(
-                              '${_foundUsers[index]["age"].toString()} years old',
-                              style: TextStyle(color: Colors.white)),
                         ),
                       ),
                     )
@@ -98,6 +105,15 @@ class _HomeScreenState extends State<discover_books> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _handleBookTap(BuildContext context, int bookId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BookDetails(bookId: bookId),
       ),
     );
   }

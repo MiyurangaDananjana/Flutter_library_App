@@ -16,8 +16,8 @@ class Home extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(16.0),
             child: Image.asset(
-              'assets/images/24005138_6897191.jpg', // Replace with your image URL
-              height: 100.0, // Set the desired height
+              'assets/images/5306597_2785751.jpg', // Replace with your image URL
+              height: 170.0, // Set the desired height
               width: double.infinity,
               fit: BoxFit.cover,
             ),

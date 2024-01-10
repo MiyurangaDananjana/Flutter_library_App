@@ -14,7 +14,6 @@ class ApiService {
           'Content-Type': 'application/json',
         },
       );
-
       if (response.statusCode == 200) {
         if (response.body == 'IsUserNotValid') {
           return false;
@@ -27,6 +26,29 @@ class ApiService {
       }
     } catch (error) {
       return false; // User is not logged in due to an exception
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getBooksByTitle(String title) async {
+    final response = await http
+        .get(Uri.parse('$_baseUrl/api/Books/get-books-details?title=$title'));
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = json.decode(response.body);
+      return responseData.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Failed to fetch data');
+    }
+  }
+
+  Future<Map<String, dynamic>> getBookDetails(int bookId) async {
+    print("Hello World");
+    final response = await http
+        .get(Uri.parse('$_baseUrl/api/Books/get-book-data?id=$bookId'));
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      return data;
+    } else {
+      throw Exception('Failed to load book details');
     }
   }
 }
