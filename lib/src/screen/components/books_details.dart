@@ -109,7 +109,8 @@ class _BookDetailsState extends State<BookDetails> {
   }
 
   Future<Map<String, dynamic>> getBookDetails(int bookId) async {
-    final _baseUrl = 'http://localhost:5107'; // Replace with your API base URL
+    final _baseUrl =
+        'http://172.16.11.7:5151'; // Replace with your API base URL
     final response = await http
         .get(Uri.parse('$_baseUrl/api/Books/get-book-data?id=$bookId'));
     if (response.statusCode == 200) {
